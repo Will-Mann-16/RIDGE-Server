@@ -380,11 +380,12 @@ module.exports.appAuthenticateStudent = function (username, password, callback) 
                             callback({success: false, reason: err2.message}, 500);
                             success = false;
                         } else if (success) {
+                            delete student.password;
                             callback({
                                 success: true,
                                 authenticated: true,
                                 token: jwt.sign({
-                                    data: user
+                                    student: user
                                 }, secretKey)
                             }, 200);
                         }

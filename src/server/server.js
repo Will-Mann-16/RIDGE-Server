@@ -57,21 +57,13 @@ io.on("connect", function (socket) {
                 });
     });
     socket.on("socket-client-server-app-read-token", function (packet) {
-        verifyTokenApp(packet, function(res){
-            if(res.success){
                 crud.appReadStudentToken(packet.token, function (response) {
                     socket.emit("socket-server-client-app-read-token", response);
                 });
-            }
-            else{
-                socket.emit("socket-server-client-app-read-token", res);
-
-            }
-        });
 
     });
     socket.on("socket-client-server-app-read-major", function (packet) {
-        verifyTokenApp(packet, function(res){
+        verifyTokenApp(packet.token, packet.id, function(res){
             if(res.success){
                 crud.appReadStudent(packet.id, false, function (response) {
                     socket.emit("socket-server-client-app-read-major", response);
@@ -84,7 +76,7 @@ io.on("connect", function (socket) {
 
     });
     socket.on("socket-client-server-app-read-minor", function (packet) {
-        verifyTokenApp(packet, function(res){
+        verifyTokenApp(packet.token, packet.id, function(res){
             if(res.success){
                 crud.appReadStudent(packet.id, true, function (response) {
                     socket.emit("socket-server-client-app-read-minor", response);
@@ -97,7 +89,7 @@ io.on("connect", function (socket) {
 
     });
     socket.on("socket-client-server-app-read-locations", function (packet) {
-        verifyTokenApp(packet, function(res){
+        verifyTokenApp(packet.token, packet.id, function(res){
             if(res.success){
                 crud.readLocations(packet.house, function (response) {
                     socket.emit("socket-server-client-app-read-locations", response);
@@ -110,7 +102,7 @@ io.on("connect", function (socket) {
 
     });
     socket.on("socket-client-server-app-update-location", function (packet) {
-        verifyTokenApp(packet, function(res){
+        verifyTokenApp(packet.token, packet.studentID, function(res){
             if(res.success){
                 crud.appUpdateStudentLocation(packet.studentID, packet.locationID, function (response) {
                     socket.emit("socket-server-client-app-update-location", response);
@@ -124,7 +116,7 @@ io.on("connect", function (socket) {
 
     });
     socket.on("socket-client-server-app-get-house-config", function (packet) {
-        verifyTokenApp(packet, function(res){
+        verifyTokenApp(packet.token, packet.id, function(res){
             if(res.success){
                 crud.appGetHouseConfig(packet.house, function (response) {
                     socket.emit("socket-server-client-app-get-house-config", response);
