@@ -1,7 +1,7 @@
 {
   "name": "RIDGE-Server",
   "version": "0.2.0",
-  "main": "src/server/server.js",
+  "main": "./app.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
@@ -13,6 +13,6 @@
     "socket.io": "^2.0.3"
   },
   "scripts": {
-    "start": "node index"
+    "start": "node app"
   }
 }
