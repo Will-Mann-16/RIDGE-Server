@@ -1,3 +1,5 @@
+'use strict';
+
 var jwt = require("jsonwebtoken");
 var config = require("./config");
 module.exports.verifyToken = function(token, house, level, next){
@@ -17,7 +19,7 @@ module.exports.verifyToken = function(token, house, level, next){
         }
     });
 
-}
+};
 module.exports.verifyTokenApp = function(token, id, next){
     if(!token){
         next({success: false, reason: "No token provided"});
@@ -31,4 +33,4 @@ module.exports.verifyTokenApp = function(token, id, next){
         }
     });
 
-}
+};

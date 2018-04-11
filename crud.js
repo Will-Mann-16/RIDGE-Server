@@ -1,3 +1,5 @@
+'use strict';
+
 var config = require("./config");
 var saltRounds = config.saltRounds;
 var secretKey = config.secretKey;
@@ -34,7 +36,7 @@ module.exports.createUser = function (user, callback) {
             });
         }
     });
-}
+};
 module.exports.readUser = function (jwt_key, getConfig, callback) {
     if (jwt_key) {
         jwt.verify(jwt_key, secretKey, function (err, decoded) {
@@ -53,7 +55,7 @@ module.exports.readUser = function (jwt_key, getConfig, callback) {
     } else {
         callback({success: false, empty: true}, 403);
     }
-}
+};
 module.exports.updateUser = function (id, user, callback) {
     if (user.password != "") {
         bcrypt.hash(user.password, saltRounds, function (err1, hash) {
@@ -89,7 +91,7 @@ module.exports.updateUser = function (id, user, callback) {
             }
         });
     }
-}
+};
 module.exports.deleteUser = function (id, callback) {
     User.findByIdAndRemove(id, function (err, user) {
         if (err) {
@@ -98,7 +100,7 @@ module.exports.deleteUser = function (id, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 module.exports.authenticateUser = function (username, password, callback) {
     var success = true;
     User.findOne({'username': username}, function (err, hash) {
@@ -135,7 +137,7 @@ module.exports.authenticateUser = function (username, password, callback) {
             });
         }
     });
-}
+};
 module.exports.readConfigUser = function (house, callback) {
     House.findById(house, function (err, resHouse) {
         if (err) {
@@ -144,7 +146,7 @@ module.exports.readConfigUser = function (house, callback) {
             callback({success: true, config: resHouse.config}, 200);
         }
     });
-}
+};
 
 //Student
 module.exports.createStudent = function (student, callback) {
@@ -164,7 +166,7 @@ module.exports.createStudent = function (student, callback) {
             });
         }
     });
-}
+};
 module.exports.readStudents = function (minor, house, callback) {
     if (minor) {
         Student.find({
@@ -187,7 +189,7 @@ module.exports.readStudents = function (minor, house, callback) {
             }
         });
     }
-}
+};
 module.exports.updateStudent = function (id, student, callback) {
     if (student.password !== "") {
         bcrypt.hash(student.password, saltRounds, function (err, hash) {
@@ -209,7 +211,7 @@ module.exports.updateStudent = function (id, student, callback) {
             }
         });
     }
-}
+};
 module.exports.updateStudentLocation = function (ids, queryLocation, callback, createHistory) {
     success = true;
     results = [];
@@ -249,7 +251,7 @@ module.exports.updateStudentLocation = function (ids, queryLocation, callback, c
     if (success) {
         callback({success: true, students: results}, 200);
     }
-}
+};
 module.exports.deleteStudent = function (id, callback) {
     Student.findByIdAndRemove(id, function (err, user) {
         if (err) {
@@ -258,7 +260,7 @@ module.exports.deleteStudent = function (id, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 module.exports.uploadStudents = function (json, house, callback) {
     var success = true;
     House.findOne({_id: house}, function (err5, housedata) {
@@ -368,7 +370,7 @@ module.exports.uploadStudents = function (json, house, callback) {
     if (success) {
         callback({success: success}, 200);
     }
-}
+};
 module.exports.appAuthenticateStudent = function (username, password, callback) {
     var success = true;
     Student.findOne({'code': username.toLowerCase()}, function (err, hash) {
@@ -405,7 +407,7 @@ module.exports.appAuthenticateStudent = function (username, password, callback) 
             });
         }
     });
-}
+};
 module.exports.appReadStudentToken = function (jwt_key, callback) {
     if (jwt_key) {
         jwt.verify(jwt_key, secretKey, function (err, decoded) {
@@ -418,7 +420,7 @@ module.exports.appReadStudentToken = function (jwt_key, callback) {
     } else {
         callback({success: false, empty: true}, 403);
     }
-}
+};
 module.exports.appReadStudent = function (id, minor, callback) {
     if (minor) {
         Student.findOne(id, 'location timelastout', function (err, student) {
@@ -437,7 +439,7 @@ module.exports.appReadStudent = function (id, minor, callback) {
             }
         });
     }
-}
+};
 module.exports.appUpdateStudentLocation = function (studentID, locationID, callback, createHistory) {
     Location.findOne({_id: locationID}, function (err1, location) {
         if (err1) {
@@ -476,7 +478,7 @@ module.exports.appUpdateStudentLocation = function (studentID, locationID, callb
             });
         }
     });
-}
+};
 
 module.exports.appGetHouseConfig = function (house, callback){
     House.findOne({_id: house}, 'config', function(err, result){
@@ -487,7 +489,7 @@ module.exports.appGetHouseConfig = function (house, callback){
        }
 
     });
-}
+};
 
 //Locations
 module.exports.createLocation = function (location, callback) {
@@ -498,7 +500,7 @@ module.exports.createLocation = function (location, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 module.exports.readLocations = function (house, callback) {
     Location.find({
         "_house": house
@@ -509,7 +511,7 @@ module.exports.readLocations = function (house, callback) {
             callback({success: true, locations: locations}, 200);
         }
     });
-}
+};
 module.exports.updateLocation = function (id, location, callback) {
     Location.findByIdAndUpdate(id, location, function (err, location) {
         if (err) {
@@ -519,7 +521,7 @@ module.exports.updateLocation = function (id, location, callback) {
             callback({success: true, location: location}, 200);
         }
     });
-}
+};
 module.exports.deleteLocation = function (id, callback) {
     Location.findByIdAndRemove(id, function (err) {
         if (err) {
@@ -528,7 +530,7 @@ module.exports.deleteLocation = function (id, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 
 //House
 module.exports.createHouse = function (house, callback) {
@@ -539,7 +541,7 @@ module.exports.createHouse = function (house, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 module.exports.readHouses = function (callback) {
     House.find({}, function (err, houses) {
         if (err) {
@@ -548,7 +550,7 @@ module.exports.readHouses = function (callback) {
             callback({success: true, houses: houses}, 200);
         }
     });
-}
+};
 module.exports.updateHouse = function (id, nHouse, callback) {
     House.findByIdAndUpdate(id, nHouse, function (err, house) {
         if (err) {
@@ -558,7 +560,7 @@ module.exports.updateHouse = function (id, nHouse, callback) {
             callback({success: true, house: house}, 200);
         }
     });
-}
+};
 module.exports.deleteHouse = function (id, callback) {
     House.findByIdAndRemove(id, function (err) {
         if (err) {
@@ -567,7 +569,7 @@ module.exports.deleteHouse = function (id, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 
 module.exports.updateHouseConfig = function (id, config, callback) {
     House.findByIdAndUpdate(id, {config: config}, function (err2, house1) {
@@ -578,7 +580,7 @@ module.exports.updateHouseConfig = function (id, config, callback) {
             callback({success: true, house: house1}, 200);
         }
     });
-}
+};
 
 //History
 module.exports.createHistory = function (history, callback) {
@@ -589,7 +591,7 @@ module.exports.createHistory = function (history, callback) {
             callback({success: true}, 200);
         }
     });
-}
+};
 module.exports.readHistory = function (filter, amount, house, callback) {
     var params = {_house: house};
     if (filter != "") {
@@ -610,7 +612,7 @@ module.exports.readHistory = function (filter, amount, house, callback) {
             callback({success: true, records: records}, 200);
         }
     })
-}
+};
 
 
 module.exports.createCallover = function (callover, callback) {
@@ -621,7 +623,7 @@ module.exports.createCallover = function (callover, callback) {
             callback({success: true, callover: callover1}, 200)
         }
     });
-}
+};
 
 module.exports.readCallover = function (house, callback) {
     Callover.find({_house: house}, function (err, callovers) {
@@ -631,7 +633,7 @@ module.exports.readCallover = function (house, callback) {
             callback({success: true, callovers: callovers},200);
         }
     });
-}
+};
 
 module.exports.createCalender = function(calender, callback){
     var newCalneder = Calender.create(calender, function(err, event){
@@ -641,7 +643,7 @@ module.exports.createCalender = function(calender, callback){
             callback({success: true, calender: calender}, 200);
         }
     })
-}
+};
 module.exports.readCalender = function (house, callback) {
     Calender.find({_house: house}, {}, {sort: {starttime: 1}}, function (err, events) {
         if (err) {
@@ -650,7 +652,7 @@ module.exports.readCalender = function (house, callback) {
             callback({success: true, events: events},200);
         }
     });
-}
+};
 module.exports.updateCalender = function (id, calender, callback) {
     Calender.findByIdAndUpdate(id, calender, function (err, house) {
         if (err) {
@@ -660,4 +662,4 @@ module.exports.updateCalender = function (id, calender, callback) {
             callback({success: true, calender: calender}, 200);
         }
     });
-}
+};
