@@ -1,0 +1,3 @@
+watchedFiles: *.js;iisnode.yml
+loggingEnabled: true
+logDirectory: iisnode
