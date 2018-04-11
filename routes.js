@@ -142,7 +142,7 @@ studentRoutes.get("/update-location", function (req, res) {
     var token = req.headers['x-access-token'];
     verifyToken(token, req.query.house, 3, function(authRes, authStat) {
         if(authRes.success){
-            crud.updateStudentLocation(req.query.ids, JSON.parse(req.query.location), function (response, status) {
+            crud.updateStudentLocation(JSON.parse(req.query.ids), JSON.parse(req.query.location), function (response, status) {
                 res.status(status).json(response);
             }, crud.createHistory);
         }
