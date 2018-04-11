@@ -13,6 +13,6 @@
     "socket.io": "^2.0.3"
   },
   "scripts": {
-    "start": "node src/server/server"
+    "start": "node index"
   }
 }
