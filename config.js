@@ -1,4 +1,3 @@
-'use strict';
 
 var saltRounds = 8;
 var secretKey = "vauxhGXfq9G7QamWi2eCevukZ9ZPyKSZHwgzGZ1ldw1Q6xYkMX5zOhOXBGQhMEN";

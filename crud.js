@@ -1,4 +1,3 @@
-'use strict';
 
 var config = require("./config");
 var saltRounds = config.saltRounds;
