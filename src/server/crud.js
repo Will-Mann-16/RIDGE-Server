@@ -148,12 +148,20 @@ module.exports.readConfigUser = function (house, callback) {
 
 //Student
 module.exports.createStudent = function (student, callback) {
-    console.log(student);
-    var newStudent = Student.create(student, function (err, student) {
+    bcrypt.hash(student.password, saltRounds, function (err, hash) {
         if (err) {
-            callback({success: false, reason: err.message}, 500);
-        } else {
-            callback({success: true}, 200);
+            callback({success: false, reason: err.message});
+        }
+        else {
+            student.password = hash;
+            var newStudent = Student.create(student, function (err, student) {
+                if (err) {
+                    callback({success: false, reason: err.message}, 500);
+                } else {
+                    callback({success: true}, 200);
+                }
+
+            });
         }
     });
 }
@@ -375,7 +383,7 @@ module.exports.appAuthenticateStudent = function (username, password, callback) 
                     success = false;
                 }
                 if (result && success) {
-                    Student.findOne({"code": username.toLowerCase()}, function (err2, user) {
+                    Student.findOne({"code": username.toLowerCase()}, function (err2, student) {
                         if (err2 && success) {
                             callback({success: false, reason: err2.message}, 500);
                             success = false;
@@ -385,7 +393,7 @@ module.exports.appAuthenticateStudent = function (username, password, callback) 
                                 success: true,
                                 authenticated: true,
                                 token: jwt.sign({
-                                    student: user
+                                    student: student
                                 }, secretKey)
                             }, 200);
                         }
