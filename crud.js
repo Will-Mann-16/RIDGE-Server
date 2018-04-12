@@ -471,7 +471,7 @@ module.exports.appReadStudentToken = function(jwt_key, callback) {
       if (err) {
         callback({ success: false, reason: err }, 500);
       } else {
-        callback({ success: true, student: decoded }, 200);
+        callback({ success: true, student: decoded.student }, 200);
       }
     });
   } else {
