@@ -1,5 +1,6 @@
 
 var bodyParser = require("body-parser");
+var cors = require("cors");
 var express = require('express');
 var app = express();
 var http = require("http");
@@ -17,11 +18,7 @@ var mongoose = require("mongoose");
 mongoose.connect(uri);
 var db = mongoose.connection;
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Access-Token");
-    next();
-});
+app.use(cors({allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, X-Access-Token", origin: "*"}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
