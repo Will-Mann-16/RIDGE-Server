@@ -26,7 +26,12 @@ var crud = require("./crud");
 
 
 var server = http.createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io')(server, {
+    log: false,
+  agent: false,
+  origins: '*:*',
+    transports: ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling', 'polling']
+});
 
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
