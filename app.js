@@ -4,8 +4,7 @@ var cors = require("cors");
 var express = require('express');
 var app = express();
 var http = require("http");
-var server = http.createServer(app);
-var io = require('socket.io')(server);
+
 var verifyTokenApp = require("./auth").verifyTokenApp;
 
 //var uri = 'mongodb://127.0.0.1:27017';
@@ -24,6 +23,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 var crud = require("./crud");
+
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
