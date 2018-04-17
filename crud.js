@@ -332,7 +332,7 @@ module.exports.uploadStudents = function(json, house, callback) {
                     {
                       firstname: student.Firstname,
                       surname: student.Surname,
-                      yeargroup: student.Yeargroup,
+                      yeargroup: housedata.config.YEARGROUP_NAMES.indexOf(student.Yeargroup),
                       code: student.Code,
                       _house: house,
                       password: hash,
@@ -353,7 +353,7 @@ module.exports.uploadStudents = function(json, house, callback) {
                 {
                   firstname: student.Firstname,
                   surname: student.Surname,
-                  yeargroup: student.Yeargroup,
+                  yeargroup: housedata.config.YEARGROUP_NAMES.indexOf(student.Yeargroup),
                   code: student.Code,
                   _house: house,
                   location: defaultLocation,
@@ -379,7 +379,7 @@ module.exports.uploadStudents = function(json, house, callback) {
                     {
                       firstname: student.Firstname,
                       surname: student.Surname,
-                      yeargroup: student.Yeargroup,
+                      yeargroup: housedata.config.YEARGROUP_NAMES.indexOf(student.Yeargroup),
                       code: student.Code,
                       _house: house,
                       password: hash
@@ -399,7 +399,7 @@ module.exports.uploadStudents = function(json, house, callback) {
                 {
                   firstname: student.Firstname,
                   surname: student.Surname,
-                  yeargroup: student.Yeargroup,
+                  yeargroup: housedata.config.YEARGROUP_NAMES.indexOf(student.Yeargroup),
                   code: student.Code,
                   _house: house
                 },
