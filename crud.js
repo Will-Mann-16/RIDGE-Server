@@ -26,6 +26,7 @@ module.exports.createViewToken = function(house, callback){
     secretKey
   )
 }, 200);
+};
 //User
 module.exports.createUser = function(user, callback) {
   bcrypt.hash(user.password, saltRounds, function(err, hash) {
@@ -102,7 +103,7 @@ module.exports.updateUser = function(id, user, callback) {
             success: true,
             token: jwt.sign(
               {
-                data: user
+                user: user
               },
               secretKey
             )
