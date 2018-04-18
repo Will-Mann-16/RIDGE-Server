@@ -25,7 +25,7 @@ module.exports.createViewToken = function(house, callback){
     },
     secretKey
   )
-}
+}, 500);
 //User
 module.exports.createUser = function(user, callback) {
   bcrypt.hash(user.password, saltRounds, function(err, hash) {
