@@ -16,7 +16,7 @@ var Callover = schema.callover;
 var Calender = schema.calender;
 
 module.exports.createViewToken = function(house, callback){
-  callback({ success: true: key: jwt.sign(
+  callback({ success: true, key: jwt.sign(
     {
       user: {
         house: house,
