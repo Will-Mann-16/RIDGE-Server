@@ -10,6 +10,11 @@ var historyRoutes = express.Router();
 var calloverRoutes = express.Router();
 var calenderRoutes = express.Router();
 
+userRoutes.post("/create-view", function(req, res){
+  crud.createViewToken(req.body.house, function(response, status){
+      res.status(status).json(response);
+  });
+});
 userRoutes.post("/create", function(req, res) {
   var user = {
     username: req.body.user.username.toLowerCase(),
@@ -70,7 +75,7 @@ userRoutes.post("/authenticate", function(req, res) {
 });
 userRoutes.get("/read-config", function(req, res) {
   var token = req.headers["x-access-token"];
-  verifyToken(token, req.query.house, 3, function(authRes, authStat) {
+  verifyToken(token, req.query.house, 4, function(authRes, authStat) {
     if (authRes.success) {
       crud.readConfigUser(req.query.house, function(response, status) {
         res.status(status).json(response);
@@ -98,7 +103,7 @@ studentRoutes.get("/read", function(req, res) {
   var minor = req.query.minor;
   var house = req.query.house;
   var token = req.headers["x-access-token"];
-  verifyToken(token, house, 3, function(authRes, authStat) {
+  verifyToken(token, house, 4, function(authRes, authStat) {
     if (authRes.success) {
       crud.readStudents(minor, house, function(response, status) {
         res.status(status).json(response);
@@ -127,7 +132,7 @@ studentRoutes.post("/update", function(req, res) {
 
 studentRoutes.get("/update-location", function(req, res) {
   var token = req.headers["x-access-token"];
-  verifyToken(token, req.query.house, 3, function(authRes, authStat) {
+  verifyToken(token, req.query.house, 4, function(authRes, authStat) {
     if (authRes.success) {
       crud.updateStudentLocation(
         JSON.parse(req.query.ids),
@@ -189,7 +194,7 @@ locationRoutes.post("/create", function(req, res) {
 });
 locationRoutes.get("/read", function(req, res) {
   var token = req.headers["x-access-token"];
-  verifyToken(token, req.query.house, 3, function(authRes, authStat) {
+  verifyToken(token, req.query.house, 4, function(authRes, authStat) {
     if (authRes.success) {
       crud.readLocations(req.query.house, function(response, status) {
         res.status(status).json(response);
@@ -241,7 +246,7 @@ houseRoutes.post("/create", function(req, res) {
 });
 houseRoutes.get("/read", function(req, res) {
   var token = req.headers["x-access-token"];
-  verifyToken(token, req.body.house, 3, function(authRes, authStat) {
+  verifyToken(token, req.body.house, 4, function(authRes, authStat) {
     if (authRes.success) {
       crud.readHouses(function(response, status) {
         res.status(status).json(response);

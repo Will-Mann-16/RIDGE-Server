@@ -15,6 +15,17 @@ var History = schema.history;
 var Callover = schema.callover;
 var Calender = schema.calender;
 
+module.exports.createViewToken = function(house, callback){
+  callback({ success: true: key: jwt.sign(
+    {
+      user: {
+        house: house,
+        role: 4
+      }
+    },
+    secretKey
+  )
+}
 //User
 module.exports.createUser = function(user, callback) {
   bcrypt.hash(user.password, saltRounds, function(err, hash) {
