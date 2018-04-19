@@ -665,7 +665,7 @@ module.exports.createHistory = function(history, callback) {
   });
 };
 module.exports.readHistory = function(filter, amount, house, callback) {
-    params = {
+    var params = {
       _house: house,
       $and: [
         $or: [
