@@ -671,7 +671,7 @@ module.exports.readHistory = function(filter, amount, house, callback) {
         {$or: [
           { "student.firstname": { $regex: filter.search, $options: "i" } },
           { "student.surname": { $regex: filter.search, $options: "i" } },
-        ],
+        ]},
         { "time": { $gte: filter.startTime, $lte: filter.endTime}},
         { "location._id": {$in: filter.whiteLocations}},
         { "student.yeargroup": {$in: filter.yeargroup}}
