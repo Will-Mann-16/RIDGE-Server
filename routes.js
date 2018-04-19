@@ -12,6 +12,7 @@ var calenderRoutes = express.Router();
 
 userRoutes.post("/create-view", function(req, res){
   crud.createViewToken(req.body.house, function(response, status){
+      console.log(response);
       res.status(status).json(response);
   });
 });

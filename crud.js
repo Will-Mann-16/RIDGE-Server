@@ -16,22 +16,13 @@ var Callover = schema.callover;
 var Calender = schema.calender;
 
 module.exports.createViewToken = function(house, callback){
-  callback({ success: true, token: jwt.sign(
-    {
-      user: {
-        house: house,
-        role: 4
-      }
-    },
-    secretKey
-  )
-}, 200);
+  callback({ success: true, token: jwt.sign({ user: {house: house, role: 4}}, secretKey)}, 200);
 };
 //User
 module.exports.createUser = function(user, callback) {
   bcrypt.hash(user.password, saltRounds, function(err, hash) {
     if (err) {
-      callback({ success: false, reason: err.message });
+      callback({ success: false, reason: err.message }, 500);
     } else {
       user.password = hash;
       User.create(user, function(error, nUser) {
