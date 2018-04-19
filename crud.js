@@ -675,9 +675,8 @@ module.exports.readHistory = function(filter, amount, house, callback) {
         { "time": { $gte: filter.startTime, $lte: filter.endTime}},
         { "location._id": {$in: filter.whiteLocations}},
         { "student.yeargroup": {$in: filter.yeargroup}}
-    ]}
-    };
-  History.find(params)
+    ]};
+      History.find(params)
     .sort("-time")
     .limit(parseInt(amount))
     .exec(function(err, records) {
