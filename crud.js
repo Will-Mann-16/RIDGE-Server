@@ -665,29 +665,18 @@ module.exports.createHistory = function(history, callback) {
   });
 };
 module.exports.readHistory = function(filter, amount, house, callback) {
-  var params = { _house: house };
-  if (filter != "") {
     params = {
       _house: house,
-      $or: [
-        { "student.firstname": { $regex: filter, $options: "i" } },
-        { "student.surname": { $regex: filter, $options: "i" } },
-        { "student.yeargroup": { $regex: filter, $options: "i" } },
-        {
-          $where:
-            'new RegExp("' +
-            filter +
-            '", "i").exec(new Date(this.time).toLocaleTimeString())'
-        },
-        {
-          $where:
-            'new RegExp("' +
-            filter +
-            '", "i").exec(new Date(this.time).toLocaleDateString())'
-        }
-      ]
+      $and: [
+        $or: [
+          { "student.firstname": { $regex: filter.search, $options: "i" } },
+          { "student.surname": { $regex: filter.search, $options: "i" } },
+        ],
+        { "time": { $gte: filter.startTime, $lte: filter.endTime}},
+        { "location._id": {$in: filter.whiteLocations}},
+        { "student.yeargroup": {$in: filter.yeargroup}}
+    ]
     };
-  }
   History.find(params)
     .sort("-time")
     .limit(parseInt(amount))

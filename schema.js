@@ -59,7 +59,7 @@ var historySchema = mongoose.Schema({
     _id: String,
     firstname: String,
     surname: String,
-    yeargroup: String
+    yeargroup: Number
   },
   location: {
     _id: String,
