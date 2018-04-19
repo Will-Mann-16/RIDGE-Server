@@ -668,7 +668,7 @@ module.exports.readHistory = function(filter, amount, house, callback) {
     var params = {
       _house: house,
       $and: [
-        {$or: [
+        filter.search === "" ? true : {$or: [
           { "student.firstname": { $regex: filter.search, $options: "i" } },
           { "student.surname": { $regex: filter.search, $options: "i" } },
         ]},
