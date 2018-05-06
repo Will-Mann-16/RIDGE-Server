@@ -483,7 +483,7 @@ module.exports.appReadStudentToken = function(jwt_key, callback) {
 };
 module.exports.appReadStudent = function(id, minor, callback) {
   if (minor) {
-    Student.findOne(id, "location timelastout", function(err, student) {
+    Student.findById(id, "location timelastout", function(err, student) {
       if (err) {
         callback({ success: false, reason: err.message }, 500);
       } else {
@@ -491,7 +491,7 @@ module.exports.appReadStudent = function(id, minor, callback) {
       }
     });
   } else {
-    Student.findOne(id, function(err, student) {
+    Student.findById(id, function(err, student) {
       if (err) {
         callback({ success: false, reason: err.message }, 500);
       } else {
@@ -721,7 +721,7 @@ module.exports.readCallover = function(house, callback) {
 };
 
 module.exports.createCalender = function(calender, callback) {
-  var newCalneder = Calender.create(calender, function(err, event) {
+  var newCalender = Calender.create(calender, function(err, event) {
     if (err) {
       callback({ success: false, reason: err.message }, 500);
     } else {
