@@ -6,13 +6,13 @@ var http = require("http");
 
 var verifyTokenApp = require("./auth").verifyTokenApp;
 
-//var uri = 'mongodb://127.0.0.1:27017';
+var uri = 'mongodb://127.0.0.1:27017';
 //var uri = 'mongodb://127.0.0.1:27017/project-signium'
 //var uri = 'mongodb://ridge-mongodb:jL74RbgxKAcBoQx8xChqtcQmUkR0ecixULdp8sfH4xpdkU4TXAkpyjk3DxqHDmE3Iby6HhaCCOOH5grAWFIQmw==@ridge-mongodb.documents.azure.com:10255/ridge-wellington?ssl=true&sslverifycertificate=false';
-var uri = "mongodb://ridge-wellington:qcyok9bI1fZVH8Y7lpTWH1HKbqQhKnMuq4eEbt7GCOLUCiHN75lCaKplHs43wBU9UusSkOgMX8uAca3ny6tVsA==@ridge-wellington.documents.azure.com:10255/wellington?ssl=true&replicaSet=globaldb";
+//var uri = "mongodb://ridge-wellington:qcyok9bI1fZVH8Y7lpTWH1HKbqQhKnMuq4eEbt7GCOLUCiHN75lCaKplHs43wBU9UusSkOgMX8uAca3ny6tVsA==@ridge-wellington.documents.azure.com:10255/wellington?ssl=true&replicaSet=globaldb";
 //var uri = "mongodb://ridge-wellington:Vr0UcABS7Un4hqAeeu9yt3VAVjjVzDNmWytr1l2sHRlEE7J0mEIzyqp8tl3urWrVVEZmFt7l9wnj2bzVt7FhiA==@ridge-wellington.documents.azure.com:10255/?ssl=true&replicaSet=globaldb";
 //var uri = 'mongodb://RIDGE:C0d1ngG33k@ridgewelly-shard-00-00-lamqk.mongodb.net:27017,ridgewelly-shard-00-01-lamqk.mongodb.net:27017,ridgewelly-shard-00-02-lamqk.mongodb.net:27017/test?ssl=true&replicaSet=RIDGEWelly-shard-0&authSource=admin'
-var port = process.env.port || 1337;
+var port = process.env.port || 8081;
 var mongoose = require("mongoose");
 mongoose.connect(uri);
 var db = mongoose.connection;
@@ -67,89 +67,6 @@ io.on("connect", function(socket) {
     });
   });
   socket.on("disconnect", function() {});
-  socket.on("socket-client-server-app-authenticate", function(packet) {
-    crud.appAuthenticateStudent(packet.username, packet.password, function(
-      response
-    ) {
-      socket.emit("socket-server-client-app-authenticate", response);
-    });
-  });
-  socket.on("socket-client-server-app-read-token", function(packet) {
-    crud.appReadStudentToken(packet.token, function(response) {
-      socket.emit("socket-server-client-app-read-token", response);
-    });
-  });
-  socket.on("socket-client-server-app-read-major", function(packet) {
-    verifyTokenApp(packet.token, packet.id, function(res) {
-      if (res.success) {
-        crud.appReadStudent(packet.id, false, function(response) {
-          socket.emit("socket-server-client-app-read-major", response);
-        });
-      } else {
-        socket.emit("socket-server-client-app-read-major", res);
-      }
-    });
-  });
-  socket.on("socket-client-server-app-read-minor", function(packet) {
-    verifyTokenApp(packet.token, packet.id, function(res) {
-      if (res.success) {
-        crud.appReadStudent(packet.id, true, function(response) {
-          socket.emit("socket-server-client-app-read-minor", response);
-        });
-      } else {
-        socket.emit("socket-server-client-app-read-minor", res);
-      }
-    });
-  });
-  socket.on("socket-client-server-app-read-locations", function(packet) {
-    verifyTokenApp(packet.token, packet.id, function(res) {
-      if (res.success) {
-        crud.readLocations(packet.house, function(response) {
-          socket.emit("socket-server-client-app-read-locations", response);
-        });
-      } else {
-        socket.emit("socket-server-client-app-read-locations", res);
-      }
-    });
-  });
-  socket.on("socket-client-server-app-update-location", function(packet) {
-    verifyTokenApp(packet.token, packet.studentID, function(res) {
-      if (res.success) {
-        crud.appUpdateStudentLocation(
-          packet.studentID,
-          packet.locationID,
-          function(response) {
-            socket.emit("socket-server-client-app-update-location", response);
-          },
-          crud.createHistory
-        );
-      } else {
-        socket.emit("socket-server-client-app-update-location", res);
-      }
-    });
-  });
-  socket.on("socket-client-server-app-get-house-config", function(packet) {
-    verifyTokenApp(packet.token, packet.id, function(res) {
-      if (res.success) {
-        crud.appGetHouseConfig(packet.house, function(response) {
-          socket.emit("socket-server-client-app-get-house-config", response);
-        });
-      } else {
-        socket.emit("socket-server-client-app-get-house-config", res);
-      }
-    });
-  });
-  socket.on("socket-client-server-app-read-calender", function(packet) {
-    verifyTokenApp(packet.token, packet.id, function(res) {
-      if (res.success) {
-        crud.readCalender(packet.house, function(response) {
-          socket.emit("socket-server-client-app-read-calender", response);
-        });
-      } else {
-        socket.emit("socket-server-client-app-read-calender", res);
-      }
-    });
-  });
 });
 
 server.listen(port);
