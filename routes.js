@@ -8,7 +8,7 @@ var locationRoutes = express.Router();
 var houseRoutes = express.Router();
 var historyRoutes = express.Router();
 var calloverRoutes = express.Router();
-var calenderRoutes = express.Router();
+var calendarRoutes = express.Router();
 
 apiRoutes.post("/view-token", function(req, res){
   crud.createViewToken(req.body.house, function(response, status){
@@ -179,6 +179,54 @@ studentRoutes.post("/upload", function(req, res) {
     }
   });
 });
+studentRoutes.post("/authenticate", function(req, res) {
+  var username = req.body.username.toLowerCase();
+  var password = req.body.password;
+  crud.appAuthenticateUser(username, password, function(response, status) {
+    res.status(status).json(response);
+  });
+});
+studentRoutes.post("/app-read-token", function(req, res){
+  crud.appReadStudentToken(res.body.token, function(response, status){
+    res.status(status).json(response);
+  });
+});
+studentRoutes.get("/app-read", function(req, res){
+  var token = req.headers["x-access-token"];
+  verifyTokenApp(token, req.query.id, function(authRes, authStat){
+    if (authRes.success) {
+      crud.appReadStudent(req.query.id, req.query.minor, function(response, status) {
+        res.status(status).json(response);
+      });
+    } else {
+      res.status(authStat).json(authRes);
+    }
+  });
+});
+studentRoutes.get("/app-update-location", function(req, res){
+  var token = req.headers["x-access-token"];
+  verifyTokenApp(token, req.query.id, function(authRes, authStat){
+    if (authRes.success) {
+      crud.appUpdateStudentLocation(req.query.id, req.query.locationID, function(response, status) {
+        res.status(status).json(response);
+      }, crud.createHistory);
+    } else {
+      res.status(authStat).json(authRes);
+    }
+  });
+});
+studentRoutes.get("/app-get-config", function(req, res){
+  var token = req.headers["x-access-token"];
+  verifyTokenApp(token, req.query.id, function(authRes, authStat){
+    if (authRes.success) {
+      crud.appGetHouseConfig(req.query.house, function(response, status) {
+        res.status(status).json(response);
+      });
+    } else {
+      res.status(authStat).json(authRes);
+    }
+  });
+});
 
 locationRoutes.post("/create", function(req, res) {
   var token = req.headers["x-access-token"];
@@ -224,6 +272,18 @@ locationRoutes.get("/delete", function(req, res) {
   verifyToken(token, req.query.house, 3, function(authRes, authStat) {
     if (authRes.success) {
       crud.deleteLocation(req.query.id, function(response, status) {
+        res.status(status).json(response);
+      });
+    } else {
+      res.status(authStat).json(authRes);
+    }
+  });
+});
+locationRoutes.get("/app-read-locations", function(req, res){
+  var token = req.headers["x-access-token"];
+  verifyTokenApp(token, req.query.id, function(authRes, authStat){
+    if (authRes.success) {
+      crud.readLocations(req.query.house, function(response, status) {
         res.status(status).json(response);
       });
     } else {
@@ -338,11 +398,11 @@ calloverRoutes.get("/read", function(req, res) {
     }
   });
 });
-calenderRoutes.post("/create", function(req, res) {
+calendarRoutes.post("/create", function(req, res) {
   var token = req.headers["x-access-token"];
   verifyToken(token, req.body.house, 2, function(authRes, authStat) {
     if (authRes.success) {
-      crud.createCalender(req.body.event, function(response, status) {
+      crud.createCalendar(req.body.event, function(response, status) {
         res.status(status).json(response);
       });
     } else {
@@ -350,11 +410,11 @@ calenderRoutes.post("/create", function(req, res) {
     }
   });
 });
-calenderRoutes.get("/read", function(req, res) {
+calendarRoutes.get("/read", function(req, res) {
   var token = req.headers["x-access-token"];
   verifyToken(token, req.query.house, 2, function(authRes, authStat) {
     if (authRes.success) {
-      crud.readCalender(req.query.house, function(response, status) {
+      crud.readCalendar(req.query.house, function(response, status) {
         res.status(status).json(response);
       });
     } else {
@@ -362,11 +422,11 @@ calenderRoutes.get("/read", function(req, res) {
     }
   });
 });
-calenderRoutes.post("/update", function(req, res) {
+calendarRoutes.post("/update", function(req, res) {
   var token = req.headers["x-access-token"];
   verifyToken(token, req.body.house, 2, function(authRes, authStat) {
     if (authRes.success) {
-      crud.updateCalender(req.body.id, req.body.event, function(
+      crud.updateCalendar(req.body.id, req.body.event, function(
         response,
         status
       ) {
@@ -377,11 +437,23 @@ calenderRoutes.post("/update", function(req, res) {
     }
   });
 });
-calenderRoutes.get("/delete", function(req, res) {
+calendarRoutes.get("/delete", function(req, res) {
   var token = req.headers["x-access-token"];
   verifyToken(token, req.query.house, 2, function(authRes, authStat) {
     if (authRes.success) {
-      crud.deleteCalender(req.query.id, function(response, status) {
+      crud.deleteCalendar(req.query.id, function(response, status) {
+        res.status(status).json(response);
+      });
+    } else {
+      res.status(authStat).json(authRes);
+    }
+  });
+});
+calendarRoutes.get("/app-read-calendar", function(req, res){
+  var token = req.headers["x-access-token"];
+  verifyTokenApp(token, req.query.id, function(authRes, authStat){
+    if (authRes.success) {
+      crud.readCalendar(req.query.house, function(response, status) {
         res.status(status).json(response);
       });
     } else {
@@ -395,7 +467,7 @@ apiRoutes.use("/locations", locationRoutes);
 apiRoutes.use("/houses", houseRoutes);
 apiRoutes.use("/history", historyRoutes);
 apiRoutes.use("/callover", calloverRoutes);
-apiRoutes.use("/calender", calenderRoutes);
+apiRoutes.use("/calendar", calendarRoutes);
 module.exports = {
   routes: apiRoutes
 };

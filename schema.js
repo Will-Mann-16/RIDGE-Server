@@ -81,7 +81,7 @@ var calloverSchema = mongoose.Schema({
   _house: String
 });
 
-var calenderSchema = mongoose.Schema({
+var calendarSchema = mongoose.Schema({
   starttime: { type: Date, default: Date.now },
   endtime: { type: Date, default: Date.now },
   title: String,
@@ -95,7 +95,7 @@ var User = mongoose.model("User", userSchema);
 var House = mongoose.model("Houselist", houseSchema, "houselist");
 var History = mongoose.model("History", historySchema, "history");
 var Callover = mongoose.model("Callover", calloverSchema, "callover");
-var Calender = mongoose.model("Calender", calenderSchema, "calender");
+var Calendar = mongoose.model("Calendar", calendarSchema, "calendar");
 
 module.exports = {
   student: Student,
@@ -104,5 +104,5 @@ module.exports = {
   house: House,
   history: History,
   callover: Callover,
-  calender: Calender
+  calendar: Calendar
 };
