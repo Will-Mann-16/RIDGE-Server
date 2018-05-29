@@ -589,7 +589,7 @@ module.exports.appReadStudentToken = function(jwt_key, callback) {
   }
 };
 module.exports.appReadStudent = function(id, minor, callback) {
-  if (minor) {
+  if (minor === "true") {
     Student.findOne({_id: id}, "location timelastout", function(err, student) {
       if (err) {
         callback({
