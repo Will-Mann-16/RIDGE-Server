@@ -1,6 +1,7 @@
 var express = require("express");
 var crud = require("./crud");
 var verifyToken = require("./auth").verifyToken;
+var verifyTokenApp = require("./auth").verifyTokenApp;
 var apiRoutes = express.Router();
 var studentRoutes = express.Router();
 var userRoutes = express.Router();
@@ -182,12 +183,12 @@ studentRoutes.post("/upload", function(req, res) {
 studentRoutes.post("/authenticate", function(req, res) {
   var username = req.body.username.toLowerCase();
   var password = req.body.password;
-  crud.appAuthenticateUser(username, password, function(response, status) {
+  crud.appAuthenticateStudent(username, password, function(response, status) {
     res.status(status).json(response);
   });
 });
 studentRoutes.post("/app-read-token", function(req, res){
-  crud.appReadStudentToken(res.body.token, function(response, status){
+  crud.appReadStudentToken(req.body.token, function(response, status){
     res.status(status).json(response);
   });
 });
@@ -219,7 +220,7 @@ studentRoutes.get("/app-get-config", function(req, res){
   var token = req.headers["x-access-token"];
   verifyTokenApp(token, req.query.id, function(authRes, authStat){
     if (authRes.success) {
-      crud.appGetHouseConfig(req.query.house, function(response, status) {
+      crud.appGetHouseConfig(authRes.decoded.student._house, function(response, status) {
         res.status(status).json(response);
       });
     } else {
@@ -283,7 +284,7 @@ locationRoutes.get("/app-read-locations", function(req, res){
   var token = req.headers["x-access-token"];
   verifyTokenApp(token, req.query.id, function(authRes, authStat){
     if (authRes.success) {
-      crud.readLocations(req.query.house, function(response, status) {
+      crud.readLocations(authRes.decoded.student._house, function(response, status) {
         res.status(status).json(response);
       });
     } else {
@@ -453,7 +454,7 @@ calendarRoutes.get("/app-read-calendar", function(req, res){
   var token = req.headers["x-access-token"];
   verifyTokenApp(token, req.query.id, function(authRes, authStat){
     if (authRes.success) {
-      crud.readCalendar(req.query.house, function(response, status) {
+      crud.readCalendar(authRes.decoded.student._house, function(response, status) {
         res.status(status).json(response);
       });
     } else {

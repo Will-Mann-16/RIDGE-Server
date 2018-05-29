@@ -18,13 +18,13 @@ module.exports.verifyToken = function(token, house, level, next) {
 };
 module.exports.verifyTokenApp = function(token, id, next) {
   if (!token) {
-    next({ success: false, reason: "No token provided" });
+    next({ success: false, reason: "No token provided" }, 403);
   }
   jwt.verify(token, config.secretKey, function(err, decoded) {
     if (err || id !== decoded.student._id) {
-      next({ success: false, reason: "Failed to authenticate token" });
+      next({ success: false, reason: "Failed to authenticate token" }, 403);
     } else {
-      next({ success: true, decoded: decoded });
+      next({ success: true, decoded: decoded }, 500);
     }
   });
 };
