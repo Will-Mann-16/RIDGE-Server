@@ -672,7 +672,7 @@ module.exports.appUpdateStudentLocation = function(studentID, locationID, callba
 module.exports.appGetHouseConfig = function(house, callback) {
   House.findOne({
     _id: house
-  }, "config", function(err, result) {
+  }, "colours name personell config", function(err, result) {
     if (err) {
       callback({
         success: false,
