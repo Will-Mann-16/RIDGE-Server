@@ -515,37 +515,33 @@ module.exports.uploadStudents = function(json, house, callback) {
   }
 };
 module.exports.appAuthenticateStudent = function(username, password, callback) {
-  var success = true;
   Student.findOne({
     code: username.toLowerCase()
   }, function(err, hash) {
-    if (err && success) {
+    if (err) {
       callback({
         success: false,
         reason: err.message
       }, 500);
-      success = false;
     }
-    if (success && hash != null) {
+    else if (hash != null) {
       bcrypt.compare(password, hash.password, function(err1, result) {
-        if (err1 && success) {
+        if (err1) {
           callback({
             success: false,
             reason: err1.message
           }, 500);
-          success = false;
         }
-        if (result && success) {
+        else if (result) {
           Student.findOne({
             code: username.toLowerCase()
           }, function(err2, student) {
-            if (err2 && success) {
+            if (err2) {
               callback({
                 success: false,
                 reason: err2.message
               }, 500);
-              success = false;
-            } else if (success) {
+            } else {
               delete student.password;
               callback({
                 success: true,
@@ -556,7 +552,7 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
               }, 200);
             }
           });
-        } else if (success) {
+        } else {
           callback({
             success: true,
             authenticated: false
