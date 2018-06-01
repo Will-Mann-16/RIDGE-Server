@@ -185,7 +185,7 @@ module.exports.authenticateUser = function(username, password, callback) {
           callback({
             success: true,
             authenticated: false
-          }, 403);
+          }, 200);
         }
       });
     }
@@ -193,7 +193,7 @@ module.exports.authenticateUser = function(username, password, callback) {
       callback({
         success: true,
         authenticated: false
-      }, 403);
+      }, 200);
     }
   });
 };
@@ -562,7 +562,7 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
           callback({
             success: true,
             authenticated: false
-          }, 403);
+          }, 200);
         }
       });
     }
@@ -570,7 +570,7 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
       callback({
         success: true,
         authenticated: false
-      }, 403);
+      }, 200);
     }
   });
 };
