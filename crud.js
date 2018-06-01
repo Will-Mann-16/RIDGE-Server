@@ -189,6 +189,12 @@ module.exports.authenticateUser = function(username, password, callback) {
         }
       });
     }
+    else{
+      callback({
+        success: true,
+        authenticated: false
+      }, 403);
+    }
   });
 };
 module.exports.readConfigUser = function(house, callback) {
@@ -559,6 +565,12 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
           }, 403);
         }
       });
+    }
+    else{
+      callback({
+        success: true,
+        authenticated: false
+      }, 403);
     }
   });
 };
