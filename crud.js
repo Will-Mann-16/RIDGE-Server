@@ -855,6 +855,7 @@ module.exports.createHistory = function(history, callback) {
   });
 };
 module.exports.readHistory = function(filter, amount, house, callback) {
+  filter = JSON.parse(filter);
   var params = {};
   if (filter.search === "") {
     params = {
