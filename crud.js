@@ -5,6 +5,7 @@ var expirationTime = config.expirationTime;
 var bcrypt = require("bcryptjs");
 
 var jwt = require("jsonwebtoken");
+var request = require("request");
 var schema = require("./schema");
 
 var User = schema.user;
@@ -26,6 +27,11 @@ module.exports.createViewToken = function(house, callback) {
     }, secretKey)
   }, 200);
 };
+module.exports.authenticateLDAP = function(username, password, callback){
+  request.post({url: "http://10.11.0.23/wapps/authUser.php", formData: {username, password}}, function(err, response, body){
+    callback(JSON.parse(body));
+  });
+}
 //User
 module.exports.createUser = function(user, callback) {
   bcrypt.hash(user.password, saltRounds, function(err, hash) {
@@ -151,50 +157,75 @@ module.exports.authenticateUser = function(username, password, callback) {
       }, 500);
       success = false;
     }
-    if (success && hash != null) {
-      bcrypt.compare(password, hash.password, function(err, result) {
-        if (err && success) {
-          callback({
-            success: false,
-            reason: err.message
-          }, 500);
-          success = false;
-        }
-        if (result && success) {
-          User.findOne({
-            username: username
-          }, function(err1, user) {
-            if (err1 && success) {
-              callback({
-                success: false,
-                reason: err1.message
-              }, 500);
-              success = false;
-            } else if (success) {
-              delete user.password;
-              callback({
-                success: true,
-                authenticated: true,
-                token: jwt.sign({
-                  user: user
-                }, secretKey, {expiresIn: expirationTime})
-              }, 200);
-            }
-          });
-        } else if (success && !result) {
-          callback({
-            success: true,
-            authenticated: false
-          }, 200);
-        }
-      });
-    }
-    else{
-      callback({
-        success: true,
-        authenticated: false
-      }, 200);
-    }
+    module.exports.authenticateLDAP(username, password, function(ldapResponse){
+      if(ldapResponse.success && ldapResponse.staff){
+        User.findOne({
+          username: username
+        }, function(err1, user) {
+          if (err1 && success) {
+            callback({
+              success: false,
+              reason: err1.message
+            }, 500);
+            success = false;
+          } else if (success) {
+            delete user.password;
+            callback({
+              success: true,
+              authenticated: true,
+              token: jwt.sign({
+                user: user
+              }, secretKey, {expiresIn: expirationTime})
+            }, 200);
+          }
+        });
+      }
+      else if (success && hash != null) {
+            bcrypt.compare(password, hash.password, function(err, result) {
+              if (err && success) {
+                callback({
+                  success: false,
+                  reason: err.message
+                }, 500);
+                success = false;
+              }
+              if (result && success) {
+                User.findOne({
+                  username: username
+                }, function(err1, user) {
+                  if (err1 && success) {
+                    callback({
+                      success: false,
+                      reason: err1.message
+                    }, 500);
+                    success = false;
+                  } else if (success) {
+                    delete user.password;
+                    callback({
+                      success: true,
+                      authenticated: true,
+                      token: jwt.sign({
+                        user: user
+                      }, secretKey, {expiresIn: expirationTime})
+                    }, 200);
+                  }
+                });
+              } else if (success && !result) {
+                callback({
+                  success: true,
+                  authenticated: false
+                }, 200);
+              }
+            });
+          }
+          else{
+            callback({
+              success: true,
+              authenticated: false
+            }, 200);
+          }
+    })
+
   });
 };
 module.exports.readConfigUser = function(house, callback) {
@@ -530,15 +561,9 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
         reason: err.message
       }, 500);
     }
-    else if (hash != null) {
-      bcrypt.compare(password, hash.password, function(err1, result) {
-        if (err1) {
-          callback({
-            success: false,
-            reason: err1.message
-          }, 500);
-        }
-        else if (result) {
+    else{
+      module.exports.authenticateLDAP(username, password, function({success, staff}){
+        if(success && !staff){
           Student.findOne({
             code: username.toLowerCase()
           }, function(err2, student) {
@@ -548,7 +573,6 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
                 reason: err2.message
               }, 500);
             } else {
-              delete student.password;
               callback({
                 success: true,
                 authenticated: true,
@@ -558,19 +582,50 @@ module.exports.appAuthenticateStudent = function(username, password, callback) {
               }, 200);
             }
           });
-        } else {
+        }
+        else if (hash != null) {
+          bcrypt.compare(password, hash.password, function(err1, result) {
+            if (err1) {
+              callback({
+                success: false,
+                reason: err1.message
+              }, 500);
+            }
+            else if (result) {
+              Student.findOne({
+                code: username.toLowerCase()
+              }, function(err2, student) {
+                if (err2) {
+                  callback({
+                    success: false,
+                    reason: err2.message
+                  }, 500);
+                } else {
+                  delete student.password;
+                  callback({
+                    success: true,
+                    authenticated: true,
+                    token: jwt.sign({
+                      student: student
+                    }, secretKey)
+                  }, 200);
+                }
+              });
+            } else {
+              callback({
+                success: true,
+                authenticated: false
+              }, 200);
+            }
+          });
+        }
+        else{
           callback({
             success: true,
             authenticated: false
           }, 200);
         }
       });
-    }
-    else{
-      callback({
-        success: true,
-        authenticated: false
-      }, 200);
     }
   });
 };
